@@ -6,22 +6,6 @@ class GUI_Support:
     def initDisplay(self, dims):
         pygame.init()
         return pygame.display.set_mode(dims)
-
-    def isQuit(self):
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                return True
-            else:
-                return False
-
-    def buttonTracker(self, inc, dec, stater):
-        keys = pygame.key.get_pressed()  #checking pressed keys
-        if keys[inc]:
-            stater = stater + 10 if stater < 100 else stater
-        if keys[dec]:
-            stater = stater - 10 if stater > 0 else stater
-        return stater
-
     
     def drawGraphics(self, position, screen, dims):
         handX, handY, handZ = position

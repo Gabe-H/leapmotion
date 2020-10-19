@@ -4,20 +4,19 @@ from pygame import *
 
 handServer = subprocess.Popen('node ./index.js')
 
-xWidth = 700
+xWidth = 800
 yHeight = 600
 zDepth = 400
-handMinimums = (-350, -300, 200)
+handMinimums = (-350, -300, 600)
+
 
 guiSupport = Support.GUI_Support()
 screen = guiSupport.initDisplay((xWidth, yHeight))
 
 def loop(screen, handPos):
-    handX, handZ, handY = handPos
-    handX = int(handX+300)
-    handY = int(handY+300)
-    handZ = int(handZ)
+    handX, handZ, handY = zeroBounds(handMinimums, handPos)
     guiSupport.drawGraphics((handX, handY, handZ), screen, (xWidth, yHeight))
+    guiSupport.displayMetrics(f'X: {handX},Y: {handY},Z: {handZ}', screen)
     pygame.display.update()
 
 #Listen for hand position from socket server
@@ -29,6 +28,21 @@ def position_update(data):
     handPosition = tuple(data)
 sio.connect('http://localhost:3000')
 
+def zeroBounds(handMinimums, handPosition):
+    xMin, yMin, zMin = handMinimums
+    xHand, zHand, yHand = handPosition
+    
+    xHand += -xMin
+    yHand += -yMin
+    zHand += -zMin
+    
+    xHand = int(xHand)
+    yHand = int(yHand)
+    zHand = int(-zHand)
+
+    return (xHand, yHand, zHand)
+
+
 running = True
 
 while running:
@@ -36,7 +50,6 @@ while running:
     for event in pygame.event.get():
         if event.type == QUIT:
             running = False
-    if guiSupport.isQuit(): break
 
 pygame.display.quit()
 sio.disconnect()
