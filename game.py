@@ -2,7 +2,8 @@ import pygame, Support, socketio, subprocess
 from pygame import *
 
 
-handServer = subprocess.Popen('node ../node/index.js')
+handServer = subprocess.Popen('node node/index.js')
+
 
 xWidth = 800
 yHeight = 600

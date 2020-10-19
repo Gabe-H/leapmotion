@@ -18,4 +18,4 @@ Python:
 - socketio
 
 # Running
-Run `py/game.py` with Python 3
+Run `game.py` with Python 3
