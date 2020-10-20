@@ -7,7 +7,7 @@ class GUI_Support:
         pygame.init()
         return pygame.display.set_mode(dims)
     
-    def drawGraphics(self, position, strength, dims, screen):
+    def drawPosition(self, position, strength, dims, screen):
         handX, handY, handZ = position
         width, height = dims
         pygame.draw.line(screen, (255, 0, 0), (0, handY), (width, handY))
@@ -33,6 +33,14 @@ class GUI_Support:
         index *= (len(data)+1) * 25
         for i in range(len(data)):
             self.drawText(data[i], i * fontSize + index, fontSize, screen)
+
+    def drawVector(self, data, index, width, screen):
+        vecX, vecY, vecZ = data
+        vecZ += 0 # Just remove unused variable error lmao
+        x = width - 50
+        y = index*100 + 50
+        pygame.draw.line(screen, (255, 0, 0), (x, y), (x + (50*vecX), y))
+        pygame.draw.line(screen, (0, 255, 0), (x, y), (x, y + (50 * -vecY)))
 
     def updateDisplay(self, screen):
         pygame.display.update()

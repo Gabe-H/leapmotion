@@ -21,23 +21,24 @@ Leap.loop({enableGestures:true}, function(frame){
       position: [0,0,0],
       side: null,
       grip: 0,
-      valid: null
+      valid: null,
+      palmNormal: [0, 0, 0]
     },
     {
       position: [0,0,0],
       side: null,
       grip: 0,
-      valid: null
+      valid: null,
+      palmNormal: [0, 0, 0]
     }
   ]
   for (i=0; i<frame.hands.length; i++) {
-    if (frame.hands[i].palmPosition)
-    data[i]['position'] = frame.hands[i].palmPosition
-    data[i]['grip'] = frame.hands[i].pinchStrength
-    data[i]['side'] = frame.hands[i].type
-    data[i]['valid'] = frame.hands[i].valid
+      data[i]['position'] = frame.hands[i].palmPosition
+      data[i]['grip'] = frame.hands[i].grabStrength
+      data[i]['side'] = frame.hands[i].type
+      data[i]['palmNormal'] = frame.hands[i].palmNormal
   }
-    update_pos(data)
+  update_pos(data)
 });
 
 function update_pos(data) {

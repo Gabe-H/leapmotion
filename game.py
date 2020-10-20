@@ -1,6 +1,6 @@
 import pygame, socketio, subprocess
 from pygame import *
-from src import Support#, USB
+from src import Support
 
 handServer = subprocess.Popen('node node/index.js')
 
@@ -10,16 +10,6 @@ handMinimums = (-350, -300, 650)
 
 guiSupport = Support.GUI_Support()
 screen = guiSupport.initDisplay((xWidth, yHeight))
-# serial = USB.USB_Support()
-
-# ser = serial.initUSB('COM5', 115200)
-# serial.connect(ser)
-# serial.write('G28 X Y', ser)
-# serial.write('G0 F10000', ser)
-# serial.write('G0 X100 Y0', ser)
-# serial.write('G0 X100 Y100', ser)
-# serial.write('G0 X0 Y100', ser)
-# serial.write('G0 X0 Y0', ser)
 
 def callibratedCoords(pos):
     x, y, z = pos
@@ -35,8 +25,11 @@ def loop(screen, data):
         pos = data[i]['position']
         handX, handY, handZ = pos
         grip = data[i]['grip']
+        pPos = data[i]['palmNormal']
+        
+        guiSupport.drawVector(pPos, i, xWidth, screen)
         guiSupport.displayMetrics(f'{side} hand, X: {handX}, Y: {handY}, Z: {handZ}, G: {grip}', i, screen)
-        guiSupport.drawGraphics(callibratedCoords(pos), grip, (xWidth, yHeight), screen)
+        guiSupport.drawPosition(callibratedCoords(pos), grip, (xWidth, yHeight), screen)
     guiSupport.updateDisplay(screen)
 
 handData = []
