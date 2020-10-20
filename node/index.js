@@ -3,8 +3,6 @@ var app = require('express')();
 var http = require('http').createServer(app);
 var io = require('socket.io')(http);
 
-var init = true
-var count = 0;
 app.get('/', (req, res) => {
   res.send();
 });
@@ -17,25 +15,31 @@ http.listen(3000, () => {
   console.log('listening on *:3000');
 });
 
-var controller = Leap.loop({enableGestures:true}, function(frame){
-  if (init) {
-    if (frame.hands[0]){
-    //    console.log(frame.hands[0].indexFinger)
-    var previousFrame = controller.frame(1);
-    pos = frame.hands[0].palmPosition
-    update_pos(pos)
-    //init = false
-      }
+Leap.loop({enableGestures:true}, function(frame){
+  data = [
+    {
+      position: [0,0,0],
+      side: null,
+      grip: 0,
+      valid: null
+    },
+    {
+      position: [0,0,0],
+      side: null,
+      grip: 0,
+      valid: null
+    }
+  ]
+  for (i=0; i<frame.hands.length; i++) {
+    if (frame.hands[i].palmPosition)
+    data[i]['position'] = frame.hands[i].palmPosition
+    data[i]['grip'] = frame.hands[i].pinchStrength
+    data[i]['side'] = frame.hands[i].type
+    data[i]['valid'] = frame.hands[i].valid
   }
+    update_pos(data)
 });
 
-function update_pos(pos) {
-  if (count < 2) {
-    count++;
-  }
-  else if (count == 2) {
-    console.log(pos)
-    io.emit('position_update', pos)
-    count = 0
-  }
+function update_pos(data) {
+  io.emit('position_update', data)
 }

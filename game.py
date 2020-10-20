@@ -1,53 +1,46 @@
-import pygame, Support, socketio, subprocess
+import pygame, socketio, subprocess
 from pygame import *
-
+from src import Support
 
 handServer = subprocess.Popen('node node/index.js')
 
-
 xWidth = 800
 yHeight = 600
-zDepth = 400
-handMinimums = (-350, -300, 600)
-
+handMinimums = (-350, -300, 650)
 
 guiSupport = Support.GUI_Support()
 screen = guiSupport.initDisplay((xWidth, yHeight))
 
-def loop(screen, handPos):
-    handX, handZ, handY = zeroBounds(handMinimums, handPos)
-    guiSupport.drawGraphics((handX, handY, handZ), screen, (xWidth, yHeight))
-    guiSupport.displayMetrics(f'X: {handX},Y: {handY},Z: {handZ}', screen)
-    pygame.display.update()
+def callibratedCoords(pos):
+    x, y, z = pos
+    x = int((xWidth/2)+x)
+    y = int(yHeight-y)
+    z = int(z + 500 / 2)
 
-#Listen for hand position from socket server
-handPosition = (0, 0, 0)
+    return (x, y, z)
+
+def loop(screen, data):
+    for i in range(len(data)):
+        side = data[i]['side']
+        pos = data[i]['position']
+        handX, handY, handZ = pos
+        grip = data[i]['grip']
+        guiSupport.displayMetrics(f'{side} hand, X: {handX}, Y: {handY}, Z: {handZ}, G: {grip}', i, screen)
+        guiSupport.drawGraphics(callibratedCoords(pos), grip, (xWidth, yHeight), screen)
+    guiSupport.updateDisplay(screen)
+
+handData = []
 sio = socketio.Client()
 @sio.event
 def position_update(data):
-    global handPosition
-    handPosition = tuple(data)
+    global handData
+    handData = data
 sio.connect('http://localhost:3000')
 
-def zeroBounds(handMinimums, handPosition):
-    xMin, yMin, zMin = handMinimums
-    xHand, zHand, yHand = handPosition
-    
-    xHand += -xMin
-    yHand += -yMin
-    zHand += -zMin
-    
-    xHand = int(xHand)
-    yHand = int(yHand)
-    zHand = int(-zHand)
-
-    return (xHand, yHand, zHand)
-
-
 running = True
-
 while running:
-    loop(screen, handPosition)
+    loop(screen, handData)
+
     for event in pygame.event.get():
         if event.type == QUIT:
             running = False
