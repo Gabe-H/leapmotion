@@ -1,6 +1,6 @@
 import pygame, socketio, subprocess
 from pygame import *
-from src import Support
+from src import Support#, USB
 
 handServer = subprocess.Popen('node node/index.js')
 
@@ -10,6 +10,16 @@ handMinimums = (-350, -300, 650)
 
 guiSupport = Support.GUI_Support()
 screen = guiSupport.initDisplay((xWidth, yHeight))
+# serial = USB.USB_Support()
+
+# ser = serial.initUSB('COM5', 115200)
+# serial.connect(ser)
+# serial.write('G28 X Y', ser)
+# serial.write('G0 F10000', ser)
+# serial.write('G0 X100 Y0', ser)
+# serial.write('G0 X100 Y100', ser)
+# serial.write('G0 X0 Y100', ser)
+# serial.write('G0 X0 Y0', ser)
 
 def callibratedCoords(pos):
     x, y, z = pos
@@ -46,5 +56,6 @@ while running:
             running = False
 
 pygame.display.quit()
+# serial.stop(ser)
 sio.disconnect()
 handServer.terminate()
