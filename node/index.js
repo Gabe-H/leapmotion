@@ -8,7 +8,7 @@ app.get('/', (req, res) => {
 });
 
 io.on('connection', (socket) => {
-  console.log('a user connected');
+  console.log('connected!');
 });
 
 http.listen(3000, () => {
@@ -19,22 +19,23 @@ Leap.loop({enableGestures:true}, function(frame){
   data = [
     {
       position: [0,0,0],
-      side: null,
+      side: 'blank',
       grip: 0,
-      valid: null,
+      valid: false,
       palmNormal: [0, 0, 0]
     },
     {
       position: [0,0,0],
-      side: null,
+      side: 'blank',
       grip: 0,
-      valid: null,
+      valid: false,
       palmNormal: [0, 0, 0]
     }
   ]
   for (i=0; i<frame.hands.length; i++) {
       data[i]['position'] = frame.hands[i].palmPosition
-      data[i]['grip'] = frame.hands[i].grabStrength
+      // data[i]['grip'] = frame.hands[i].grabStrength
+      data[i]['grip'] = frame.hands[i].pinchStrength
       data[i]['side'] = frame.hands[i].type
       data[i]['palmNormal'] = frame.hands[i].palmNormal
   }
