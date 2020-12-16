@@ -9,6 +9,7 @@ yHeight = 600
 handMinimums = (-350, -300, 650)
 
 guiSupport = Support.GUI_Support()
+
 screen = guiSupport.initDisplay((xWidth, yHeight))
 
 def callibratedCoords(pos):
@@ -20,6 +21,7 @@ def callibratedCoords(pos):
     return (x, y, z)
 
 def loop(screen, data):
+    ## For both hands, use the Support library to represent the data on screen
     for i in range(len(data)):
         side = data[i]['side']
         pos = data[i]['position']

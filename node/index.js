@@ -16,6 +16,7 @@ http.listen(3000, () => {
 });
 
 Leap.loop({enableGestures:true}, function(frame){
+  // Reset data array
   data = [
     {
       position: [0,0,0],
@@ -32,13 +33,16 @@ Leap.loop({enableGestures:true}, function(frame){
       palmNormal: [0, 0, 0]
     }
   ]
+  // Get data for both hands, if they exist
   for (i=0; i<frame.hands.length; i++) {
       data[i]['position'] = frame.hands[i].palmPosition
       // data[i]['grip'] = frame.hands[i].grabStrength
       data[i]['grip'] = frame.hands[i].pinchStrength
       data[i]['side'] = frame.hands[i].type
       data[i]['palmNormal'] = frame.hands[i].palmNormal
+      console.log(data[i]['position'])
   }
+  // Send data through Socket.io
   update_pos(data)
 });
 
