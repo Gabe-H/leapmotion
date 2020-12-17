@@ -26,6 +26,8 @@ npm install
 Run `python game.py` from the default dir.
 
 
+![Screenshot](https://cdn.discordapp.com/attachments/699865498052984913/788946259640713250/leapmotion_python.png)
+
 # How it works
 The leap motion controller is always hosted on a windows app from Ultraleap. When
 supporting their (no longer updated) Javascript API, the app hosts a local server on
